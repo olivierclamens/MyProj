@@ -2,35 +2,36 @@
 
 int main()
 {
-    int nb=164,n,ind,j,k,numByte,lim,off,numLigne,max;
+    int nb=2546895232,format=32;
+
     unsigned char nbBin[32+3+1]; //3 espaces dans le pire des cas (32 bits) et 1 caractère NULL
     unsigned char nbBinSp[32+3+1];
-    int i,format=11;
+    int i,ind,j,k,numByte,lim,off,numLigne,max,multiple;
 
-    for(i=0;i<format;i++){
-        nbBin[i]=((nb>>(format-1-i))&0x01)+0x30;
+    for(ind=0;ind<format;ind++){
+        nbBin[ind]=((nb>>(format-1-ind))&0x01)+0x30;
     }
-    nbBin[i]=0;
+    nbBin[ind]=0;
+    printf("nb=%d\t=> %s\n",nb,nbBin);
 
-    n=i%8;
-    if(0==n){
-        max=i/8;
-        numByte=0;
-        ind=0;
+    multiple=ind%8;
+    max=ind/8;
+    numByte=0;
+    ind=0;
+    if(0==multiple){
         for(k=0;k<max;k++){
             for(j=0;j<8;j++){
                 nbBinSp[j+k*8+numByte]=nbBin[ind];
                 ind++;
             }
-            nbBinSp[j+k*8+numByte]=' ';
+            if((max-k)>1)
+                nbBinSp[j+k*8+numByte]=' ';
             numByte++;
         }
         nbBinSp[j+k*8+numByte]=0;
     }else{
-        max=i/8+1;
-        numByte=0;
-        ind=0;
-        for(k=0,lim=n,off=0,numLigne=0;k<max;k++){
+        max+=1;
+        for(k=0,lim=multiple,off=0,numLigne=0;k<max;k++){
             for(j=0;j<lim;j++){
                 nbBinSp[j+numLigne*8+numByte+off]=nbBin[ind];
                 ind++;
@@ -40,11 +41,11 @@ int main()
                 numLigne++;
             numByte++;
             lim=8;
-            off=n;
+            off=multiple;
         }
         nbBinSp[j+numLigne*8+numByte+off]=0;            
-    }
-    printf("%s\n%s",nbBin,nbBinSp);
+    }	
+    printf("nb=%d\t=> %s\n",nb,nbBinSp);
     
     return 0;
 }
